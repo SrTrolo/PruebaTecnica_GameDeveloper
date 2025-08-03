@@ -1,0 +1,97 @@
+{
+  "quiz": [
+    {
+      "Pregunta": "¿Cuál es la capital de Francia?",
+      "Respuestas": [
+        "Madrid",
+        "París",
+        "Roma"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "Pregunta": "¿De cuantos miembros está compuesto el equipo de los 4 fantásticos?",
+      "Respuestas": [
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "Pregunta": "¿Qué planeta es el más grande del sistema solar?",
+      "Respuestas": [
+        "Tierra",
+        "Marte",
+        "Júpiter",
+        "Plutón"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "Pregunta": "¿Cuál es el resultado de 9 x 8?",
+      "Respuestas": [
+        "72",
+        "81",
+        "69"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "Pregunta": "¿Por cada una de arroz ... de agua?",
+      "Respuestas": [
+        "1",
+        "2"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "Pregunta": "¿Qué fruta es la casa de Bob Esponja?",
+      "Respuestas": [
+        "Piña",
+        "Plátano",
+        "Manzana"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "Pregunta": "¿Cada cuantos años se celebran las Olimpiadas?",
+      "Respuestas": [
+        "5",
+        "2",
+        "4"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "Pregunta": "¿Cuántos jugadores participan en un partido de fútbol sala?",
+      "Respuestas": [
+        "10",
+        "5",
+        "14"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "Pregunta": "¿En términos de reproducción entre humanos y Pokémon, qué Pokémon es más compatible para los Humanos?",
+      "Respuestas": [
+        "Mega-Lopunny",
+        "Vaporeon",
+        "FerroSeed",
+        "Lapras",
+        "Onix",
+        "Rotom\n(Ventilador)"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "Pregunta": "¿Qué gas es esencial para que respiremos?",
+      "Respuestas": [
+        "Dióxido de carbono",
+        "Oxígeno",
+        "Hidrógeno"
+      ],
+      "correctIndex": 1
+    }
+  ]
+}
