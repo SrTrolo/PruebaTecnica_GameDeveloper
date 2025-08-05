@@ -16,6 +16,7 @@ import {
 } from 'cc';
 import {SlotManager} from "db://assets/Scripts/SlotApp/SlotManager";
 import {Paytable} from "db://assets/Scripts/SlotApp/Paytable";
+import {SymbolController} from "./SymbolController";
 
 const {randomRangeInt} = math;
 const { ccclass, property } = _decorator;
@@ -72,7 +73,7 @@ export class ReelController extends Component {
         for (let i = 0; i < symbolAmmount; i++) {
             let newSymbol= instantiate(this.symbolPrefab);
             newSymbol.parent = this.node;
-            this.updateSymbol(newSymbol);
+            this.updateSymbol(newSymbol,null);
         }
         //Hago Update del Layout para actualizar las posiciones de los símbolos:
         this.node.getComponent(Layout).updateLayout();
@@ -103,9 +104,6 @@ export class ReelController extends Component {
 
             // Si pasa el límite inferior, recolocar arriba
             if (posY < this._finalPosY) {
-                const resetY = posY + this._totalSpacing * this._symbols.length;
-                symbol.setPosition(currentPos.x, resetY, currentPos.z);
-                this.updateSymbol(symbol);
 
                 // Parada de los reels si _canStop
                 if (this._canStop) {
@@ -120,35 +118,54 @@ export class ReelController extends Component {
                     //Forzar posición exacta de los simbolos
                     for (let j = 0; j < this._symbols.length; j++) {
                         const newSymbol = this._symbols[j];
-                        const y = this._initialPosY - (this._totalSpacing * j);
-
+                        const y = this._initialPosY - (this._totalSpacing * (j+1));
                         newSymbol.setPosition(0, y, 0);
                     }
                     //Una vez colocados, informar a SlotManager de que ha terminado el SPIN
-                    SlotManager.instance.eventTarget.emit('reelStopped', this.reelId);
                     log(`Reel ${this.reelId}: fin de giro`);
+                    SlotManager.instance.eventTarget.emit('reelStopped', this.reelId);
+
+                }
+                else{
+                    //Colocar simbolo correctamente
+                    const resetY = posY + this._totalSpacing * this._symbols.length;
+                    symbol.setPosition(currentPos.x, resetY, currentPos.z);
+                    this.updateSymbol(symbol, null);
                 }
             }
         }
     }
 
-    private updateSymbol(symbol: Node) {
+    private updateSymbol(symbol: Node, forceSymbol: Number) {
         //Escoger simbolo random de la paytable
-        const randomSymbol= Paytable.Paytable[randomRangeInt(0, Paytable.Paytable.length - 1)];
+        if (!forceSymbol) {
+
+            //forceSymbol= randomInt;
+            //FORZAR PREMIOS
+        }
+        let randomInt = randomRangeInt(0, Paytable.Paytable.length)
+
+        const randomSymbol= Paytable.Paytable[randomInt];
         //log(`Símbolo elegido: ${randomSymbol.symbolName}`);
         //Actualizar visuales
         symbol.getComponent(Sprite).spriteFrame = randomSymbol.symbolSprite;
+        symbol.getComponent(SymbolController).setSymbolID(randomSymbol.symbolID);
     }
 
     public getNewSymbolPosition(startIndex: number): Node[] {
         // Crear el nuevo array ordenado lógicamente desde el símbolo con id: startIndex
         const newSymbols = [];
 
-        for (let i = 0; i < this._symbols.length; i++) {
+        for (let i = 1; i < this._symbols.length + 1; i++) {
             const pos = (startIndex + i) % this._symbols.length;
             newSymbols.push(this._symbols[pos]);
         }
+
         return newSymbols;
+    }
+
+    public getSymbolIDAt(symbolIndex: number): number {
+        return this._symbols[symbolIndex].getComponent(SymbolController).getSymbolID();
     }
 
     public stopSpin() {

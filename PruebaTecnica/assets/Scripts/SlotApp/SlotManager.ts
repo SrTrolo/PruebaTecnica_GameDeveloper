@@ -1,7 +1,7 @@
 
 import {_decorator, Component, Node, EventTarget, log, Prefab, instantiate, Layout} from 'cc';
 import {ReelController} from "db://assets/Scripts/SlotApp/ReelController";
-import {SymbolData} from "db://assets/Scripts/SlotApp/Paytable";
+import {Paytable} from "db://assets/Scripts/SlotApp/Paytable";
 const { ccclass, property } = _decorator;
 
 /**
@@ -105,39 +105,38 @@ export class SlotManager extends Component {
     }
 
     private calculateResult() {
-        /**const reels = this.reelsContent.children;
+        const reels = this.reelsContent.children;
+        const line = 2;
 
-        // Linea que se comprueba
-        const winSymbol = 2;
+        //Recogo el simbolo del reel 0;
+        const winningID = reels[0].getComponent(ReelController).getSymbolIDAt(line);
 
-        const symbolsInLine: SymbolData[] = [];
+        for (let i = 1; i < reels.length; i++) {
+            const reelController = reels[i].getComponent(ReelController);
 
-        for (let i = 0; i < reels.length; i++) {
-            const reel = reels[i].getComponent(ReelController);
-
-            const reelSymbols = reel.getNewSymbolPosition(0);
-            const symbolNode = reelSymbols[winSymbol];
-
-            if (!symbolNode || !symbolNode["data"]) {
-                console.warn(`Símbolo faltante o sin data en Reel ${i}, fila ${winSymbol}`);
+            if (!reelController) {
+                console.warn(`⚠️ Reel ${i} sin componente ReelController`);
                 return;
             }
 
-            symbolsInLine.push(symbolNode["data"]);
+            const currentID = reelController.getSymbolIDAt(line);
+
+            if (currentID !== winningID) {
+                console.log('❌ No hay línea ganadora.');
+                this.currentState = SlotState.Idle;
+                return;
+            }
         }
 
-        const first = symbolsInLine[0];
-        const isWinning = symbolsInLine.every(s => s.symbolID === first.symbolID);
+        const winningSymbol = Paytable.Paytable[winningID];
+        const totalWin = winningSymbol.symbolValue * reels.length;
 
-        if (isWinning) {
-            console.log(`🎉 Línea ganadora con símbolo "${first.symbolName}" (ID: ${first.symbolID})`);
-            // Aquí sumar premio o mostrar animación
-        } else {
-            console.log(`❌ No hay coincidencia en la línea central.`);
-        }
-        **/
+        console.log(`🎉 Línea ganadora con símbolo "${winningSymbol.symbolName}"`);
+        console.log(`💰 Premio: ${winningSymbol.symbolValue} x ${reels.length} = ${totalWin}`);
+
         this.currentState = SlotState.Idle;
     }
+
 }
 
 /**

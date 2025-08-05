@@ -19,13 +19,16 @@ export class SymbolController extends Component {
 
     @property(Sprite)
     sprite: Sprite | null = null;
+    private _symbolID: number;
 
-    // Actualiza el símbolo con una nueva imagen
-    public updateSymbol(newSpriteFrame: SpriteFrame) {
-        if (this.sprite) {
-            this.sprite.spriteFrame = newSpriteFrame;
-        }
+    public getSymbolID(){
+        return this._symbolID;
     }
+    public setSymbolID(id: number) {
+        this._symbolID = id;
+    }
+
+
 }
 
 /**
