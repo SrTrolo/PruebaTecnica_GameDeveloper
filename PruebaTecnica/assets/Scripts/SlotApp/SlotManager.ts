@@ -1,5 +1,5 @@
 
-import {_decorator, Component, Node, EventTarget, log, Prefab, instantiate, Layout} from 'cc';
+import {_decorator, Component, Node, EventTarget, log, Prefab, instantiate, Layout, Label, tween} from 'cc';
 import {ReelController} from "db://assets/Scripts/SlotApp/ReelController";
 import {Paytable} from "db://assets/Scripts/SlotApp/Paytable";
 const { ccclass, property } = _decorator;
@@ -24,29 +24,39 @@ enum SlotState {
 
 @ccclass('SlotManager')
 export class SlotManager extends Component {
+
     public static instance: SlotManager;
+
     private currentState: SlotState = SlotState.Idle;
+    private stoppedReelsCount: number = 0;
 
     public eventTarget: EventTarget = new EventTarget();
 
-    @property(Node) reelsContent: Node = null;
+    // Nodos de la interfaz
+    @property(Node) public reelsContent: Node = null;
+    @property(Node) public balanceLabel: Node = null;
+
+    // Prefabs
     @property(Prefab) public reelPrefab: Prefab = null;
 
-    @property symbolAmmount: number = 0;
-    @property reelAmmount: number = 0;
+    // Configuración del juego
+    @property public symbolAmmount: number = 0;
+    @property public reelAmmount: number = 0;
 
-    @property reelDelay: number = 0;
-    @property spinDuration: number = 0;
+    // Tiempos y animaciones
+    @property public reelDelay: number = 0;
+    @property public spinDuration: number = 0;
 
-
-    // Contador de reels que han notificado su parada
-    private stoppedReelsCount: number = 0;
-
+    // Valores de juego
+    @property public balance: number = 0;
+    @property public currentBet: number = 10;
 
     onLoad() {
         SlotManager.instance = this
         // Suscribirse al evento "reelStopped" (cada Reel avisará cuando termine)
         this.eventTarget.on('reelStopped', this.onReelStopped, this);
+
+        this.balanceLabel.getComponent(Label).string = this.balance.toString();
     }
 
     start() {
@@ -65,8 +75,9 @@ export class SlotManager extends Component {
     }
 
     public startSpin() {
-        //Condición para que el boton spin solo funcione cuando el state = IDLE
-        if (this.currentState !== SlotState.Idle) return;
+        //Condición para que el boton spin solo funcione cuando estemos en el estado de Idle y se pueda pagar el SPIN;
+        const canStart = this.currentState === SlotState.Idle && this.canPay();
+        if(!canStart) return;
 
         //log("Slot: iniciar giro");
         this.currentState = SlotState.Spinning;
@@ -74,9 +85,12 @@ export class SlotManager extends Component {
         // Iniciar cada reel
         for (let i = 0; i < this.reelsContent.children.length; i++) {
             const reel = this.reelsContent.children[i];
-            //Añadir delay entre los reels al iniciar
+
+            //Resetear Animaciones de los símbolos;
+            reel.getComponent(ReelController).resetAllAnimations();
+
+            //Delay entre los reels al iniciar y al parar
             const startDelay = i * this.reelDelay;
-            //Añadir delay entre los reels al parar
             const stopDelay = this.spinDuration + startDelay;
 
             this.scheduleOnce(() => {
@@ -89,6 +103,17 @@ export class SlotManager extends Component {
                 reel.getComponent(ReelController).stopSpin();
             }, stopDelay);
         }
+    }
+
+    //Booleana para comprobar si puedo pagar el SPIN
+    private canPay(): boolean {
+        if(this.balance - this.currentBet < 0) {
+            log("no puedo spinear");
+            return false;
+        }
+        this.balance = this.balance - this.currentBet;
+        this.balanceLabel.getComponent(Label).string = this.balance.toString();
+        return true;
     }
 
     // Callback cada vez que un Reel termina su giro
@@ -113,12 +138,6 @@ export class SlotManager extends Component {
 
         for (let i = 1; i < reels.length; i++) {
             const reelController = reels[i].getComponent(ReelController);
-
-            if (!reelController) {
-                console.warn(`⚠️ Reel ${i} sin componente ReelController`);
-                return;
-            }
-
             const currentID = reelController.getSymbolIDAt(line);
 
             if (currentID !== winningID) {
@@ -131,10 +150,24 @@ export class SlotManager extends Component {
         const winningSymbol = Paytable.Paytable[winningID];
         const totalWin = winningSymbol.symbolValue * reels.length;
 
+        this.updateBalance(totalWin);
+
+        //Animar simbolos de la linia premiada
+        reels.forEach((reel) => {
+            reel.getComponent(ReelController).animateSymbol(line, 1);
+        })
+
         console.log(`🎉 Línea ganadora con símbolo "${winningSymbol.symbolName}"`);
         console.log(`💰 Premio: ${winningSymbol.symbolValue} x ${reels.length} = ${totalWin}`);
 
         this.currentState = SlotState.Idle;
+    }
+
+    //Función para actualizar el balance
+    //AÑADIR TWEEN
+    private updateBalance(ammount: number) {
+        this.balance = this.balance + ammount;
+        this.balanceLabel.getComponent(Label).string = this.balance.toString();
     }
 
 }

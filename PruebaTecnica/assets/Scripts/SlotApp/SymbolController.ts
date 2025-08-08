@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, SpriteFrame, Sprite } from 'cc';
+import { _decorator, Component, Node, SpriteFrame, Sprite, Animation } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
@@ -17,15 +17,24 @@ const { ccclass, property } = _decorator;
 @ccclass('SymbolController')
 export class SymbolController extends Component {
 
-    @property(Sprite)
-    sprite: Sprite | null = null;
     private _symbolID: number;
+
+    private _symbolAnimation: Animation;
+
+    onLoad() {
+        this._symbolAnimation = this.getComponent(Animation);
+    }
 
     public getSymbolID(){
         return this._symbolID;
     }
     public setSymbolID(id: number) {
         this._symbolID = id;
+    }
+
+    public changeAnimation(id: number) {
+        const clip = this._symbolAnimation.clips[id].name
+        this._symbolAnimation.play(clip);
     }
 
 

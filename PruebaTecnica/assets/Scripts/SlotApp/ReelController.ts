@@ -167,12 +167,22 @@ export class ReelController extends Component {
     public getSymbolIDAt(symbolIndex: number): number {
         return this._symbols[symbolIndex].getComponent(SymbolController).getSymbolID();
     }
+    public animateSymbol(symbolIndex: number, animationID: number) {
+        this._symbols[symbolIndex].getComponent(SymbolController).changeAnimation(animationID);
+    }
+    public resetAllAnimations() {
+        for (let i = 0; i < this._symbols.length; i++) {
+            this._symbols[i].getComponent(SymbolController).changeAnimation(0);
+        }
+    }
 
     public stopSpin() {
         if(!this._canSpin) return;
         //TWEEN BAJAR VELOCIDAD
         this._canStop = true;
     }
+
+
 
 }
 
