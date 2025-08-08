@@ -46,6 +46,7 @@ export class SlotManager extends Component {
     // Tiempos y animaciones
     @property public reelDelay: number = 0;
     @property public spinDuration: number = 0;
+    @property public balanceIncrementTime: number = 0;
 
     // Valores de juego
     @property public balance: number = 0;
@@ -160,14 +161,36 @@ export class SlotManager extends Component {
         console.log(`🎉 Línea ganadora con símbolo "${winningSymbol.symbolName}"`);
         console.log(`💰 Premio: ${winningSymbol.symbolValue} x ${reels.length} = ${totalWin}`);
 
-        this.currentState = SlotState.Idle;
+
     }
 
     //Función para actualizar el balance
     //AÑADIR TWEEN
     private updateBalance(ammount: number) {
-        this.balance = this.balance + ammount;
-        this.balanceLabel.getComponent(Label).string = this.balance.toString();
+        const startBalance = this.balance;
+        const finalBalance = this.balance + ammount;
+
+        const label = this.balanceLabel.getComponent(Label);
+
+        const counter = { value: startBalance };
+
+        tween(counter)
+            .to(this.balanceIncrementTime, { value: finalBalance }, {
+                onUpdate: () => {
+                    this.balance = Math.round(counter.value);
+                    label.string = this.balance.toString();
+                },
+                onComplete: () => {
+                    this.balance = finalBalance;
+                    this.currentState = SlotState.Idle;
+                }
+            })
+            .start();
+
+
+        //this.balance = this.balance + ammount;
+        //this.balanceLabel.getComponent(Label).string = this.balance.toString();
+
     }
 
 }
