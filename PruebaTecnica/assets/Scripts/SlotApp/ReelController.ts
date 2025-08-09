@@ -3,15 +3,12 @@ import {
     _decorator,
     Component,
     Node,
-    SpriteFrame,
     tween,
-    Vec3,
     log,
     UITransform,
     Layout,
     Prefab,
     math,
-    Sprite,
     instantiate,
     Animation
 } from 'cc';
@@ -56,6 +53,8 @@ export class ReelController extends Component {
 
     private _reelAnimation : Animation = null;
 
+    private _forceSymbol : number = -1;
+
     private setReelProperties(symbolAmmount: number) {
         this._symbols = this.symbolContent.children;
         //Tamaño del simbolo (Hecho para que todos sean iguales)
@@ -76,7 +75,7 @@ export class ReelController extends Component {
         for (let i = 0; i < symbolAmmount; i++) {
             let newSymbol= instantiate(this.symbolPrefab);
             newSymbol.parent = this.symbolContent;
-            this.updateSymbol(newSymbol,null);
+            this.updateSymbol(newSymbol);
         }
         //Hago Update del Layout para actualizar las posiciones de los símbolos:
         this.symbolContent.getComponent(Layout).updateLayout();
@@ -88,9 +87,14 @@ export class ReelController extends Component {
         this._reelAnimation.play(clip);
     }
 
-    startSpin(finalSpeed:number, time:number) {
+    startSpin(finalSpeed:number, time:number, forceSymbol:number) {
         if (this._canSpin) return;
         this._canSpin = true;
+
+        //Int para forzar simbolos
+        this._forceSymbol = forceSymbol;
+
+        //Animación del reel
         this.playReelAnimation(0);
         log(`Reel ${this.reelId}: inicio de giro`);
 
@@ -153,26 +157,24 @@ export class ReelController extends Component {
                     //Colocar simbolo correctamente
                     const resetY = posY + this._totalSpacing * this._symbols.length;
                     symbol.setPosition(currentPos.x, resetY, currentPos.z);
-                    this.updateSymbol(symbol, null);
+                    this.updateSymbol(symbol);
                 }
             }
         }
     }
 
-    private updateSymbol(symbol: Node, forceSymbol: Number) {
+    private updateSymbol(symbol: Node) {
         //Escoger simbolo random de la paytable
-        if (!forceSymbol) {
+        const paytable = Paytable.Paytable;
+        let symbolID = this._forceSymbol;
 
-            //forceSymbol= randomInt;
-            //FORZAR PREMIOS
+        if(this._forceSymbol < 0){
+            symbolID = randomRangeInt(0, paytable.length);
         }
-        let randomInt = randomRangeInt(0, Paytable.Paytable.length)
 
-        const randomSymbol= Paytable.Paytable[randomInt];
-        //log(`Símbolo elegido: ${randomSymbol.symbolName}`);
-        //Actualizar visuales
-        symbol.getComponent(Sprite).spriteFrame = randomSymbol.symbolSprite;
-        symbol.getComponent(SymbolController).setSymbolID(randomSymbol.symbolID);
+        const data = paytable[symbolID];
+        symbol.getComponent(SymbolController).updateSymbol(data.symbolID, data.symbolSprite);
+
     }
 
     public getNewSymbolPosition(startIndex: number): Node[] {

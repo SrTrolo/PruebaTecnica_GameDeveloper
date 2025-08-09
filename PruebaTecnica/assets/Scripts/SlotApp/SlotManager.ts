@@ -1,7 +1,9 @@
 
-import {_decorator, Component, Node, EventTarget, log, Prefab, instantiate, Layout, Label, tween} from 'cc';
+import {_decorator, Component, Node, EventTarget, log, Prefab, instantiate, Layout, Label, tween, Button, EventHandler} from 'cc';
 import {ReelController} from "db://assets/Scripts/SlotApp/ReelController";
 import {Paytable} from "db://assets/Scripts/SlotApp/Paytable";
+import {PaytableSymbolController} from "db://assets/Scripts/SlotApp/PaytableSymbolController";
+import {SymbolController} from "db://assets/Scripts/SlotApp/SymbolController";
 const { ccclass, property } = _decorator;
 
 /**
@@ -35,9 +37,11 @@ export class SlotManager extends Component {
     // Nodos de la interfaz
     @property(Node) public reelsContent: Node = null;
     @property(Node) public balanceLabel: Node = null;
+    @property(Node) public paytableSymbolContent: Node = null;
 
     // Prefabs
     @property(Prefab) public reelPrefab: Prefab = null;
+    @property(Prefab) public paytableSymbolPrefab: Prefab = null;
 
     // Configuración del juego
     @property public symbolAmmount: number = 0;
@@ -63,10 +67,12 @@ export class SlotManager extends Component {
         this.eventTarget.on('reelStopped', this.onReelStopped, this);
 
         this.balanceLabel.getComponent(Label).string = this.balance.toString();
+
     }
 
     start() {
         this.createReels();
+        this.createPaytable();
     }
 
     private createReels(){
@@ -80,13 +86,41 @@ export class SlotManager extends Component {
         }
     }
 
-    public startSpin() {
+    private createPaytable(){
+        for (let i = 0; i < Paytable.Paytable.length; i++) {
+            let newPaytableSymbol = instantiate(this.paytableSymbolPrefab);
+            newPaytableSymbol.parent = this.paytableSymbolContent;
+
+            const data = Paytable.Paytable[i];
+            newPaytableSymbol.getComponent(PaytableSymbolController).updatePaytableSymbol(
+                data.symbolSprite,
+                data.symbolValue,
+                this.currentBet,
+                this.reelAmmount,
+            );
+            const newPaytableSymbolButton = newPaytableSymbol.children[0].getComponent(Button);
+            if (newPaytableSymbolButton) {
+
+                const eh = new EventHandler();
+                eh.target = this.node;
+                eh.component = 'SlotManager';
+                eh.handler = 'startSpin';
+                eh.customEventData = i.toString();
+
+                newPaytableSymbolButton.clickEvents.push(eh);
+            }
+        }
+    }
+
+    public startSpin(event: Event, customEventData: string) {
         //Condición para que el boton spin solo funcione cuando estemos en el estado de Idle y se pueda pagar el SPIN;
         const canStart = this.currentState === SlotState.Idle && this.canPay();
         if(!canStart) return;
 
-        //log("Slot: iniciar giro");
         this.currentState = SlotState.Spinning;
+
+        //parsear el string a int
+        const forceSymbolID = parseInt(customEventData);
 
         // Iniciar cada reel
         for (let i = 0; i < this.reelsContent.children.length; i++) {
@@ -101,7 +135,7 @@ export class SlotManager extends Component {
 
             this.scheduleOnce(() => {
                 //SPIN de los reels
-                reel.getComponent(ReelController).startSpin(this.reelSpeed, this.increaseSpinDuration);
+                reel.getComponent(ReelController).startSpin(this.reelSpeed, this.increaseSpinDuration, forceSymbolID);
             }, startDelay);
 
             this.scheduleOnce(() => {
@@ -141,6 +175,7 @@ export class SlotManager extends Component {
 
         //Recogo el simbolo del reel 0;
         const winningID = reels[0].getComponent(ReelController).getSymbolIDAt(line);
+        //log(winningID);
 
         for (let i = 1; i < reels.length; i++) {
             const reelController = reels[i].getComponent(ReelController);

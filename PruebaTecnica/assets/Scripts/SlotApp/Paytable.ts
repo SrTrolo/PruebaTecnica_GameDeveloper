@@ -29,10 +29,10 @@ export class Paytable extends Component {
             new SymbolData(1, "MUSIC", this.symbolSprite[1], 2),
             new SymbolData(2, "CANDY", this.symbolSprite[2], 2),
             new SymbolData(3, "PAW", this.symbolSprite[3], 5),
-            new SymbolData(0, "HAT", this.symbolSprite[4], 5),
-            new SymbolData(1, "STAR", this.symbolSprite[5], 10),
-            new SymbolData(2, "ALPACA", this.symbolSprite[6], 10),
-            new SymbolData(3, "CROWN", this.symbolSprite[7], 15),
+            new SymbolData(4, "HAT", this.symbolSprite[4], 5),
+            new SymbolData(5, "STAR", this.symbolSprite[5], 10),
+            new SymbolData(6, "ALPACA", this.symbolSprite[6], 10),
+            new SymbolData(7, "CROWN", this.symbolSprite[7], 15),
         ];
     }
 }
