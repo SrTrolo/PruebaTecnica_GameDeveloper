@@ -12,7 +12,8 @@ import {
     Prefab,
     math,
     Sprite,
-    instantiate
+    instantiate,
+    Animation
 } from 'cc';
 import {SlotManager} from "db://assets/Scripts/SlotApp/SlotManager";
 import {Paytable} from "db://assets/Scripts/SlotApp/Paytable";
@@ -36,57 +37,77 @@ const { ccclass, property } = _decorator;
 @ccclass('ReelController')
 export class ReelController extends Component {
     @property reelId: number = 0;
-    @property reelSpeed: number = 0;
 
     @property(Prefab) public symbolPrefab: Prefab = null;
-
+    @property(Node) public symbolContent: Node = null;
 
     private _symbols: Node[] = [];
 
-    private _symbolSpacing: number = 50;
+    private _symbolSpacing: number = 0;
     private _totalSpacing : number = 0;
-    private _symbolHeight: number = 300;
+    private _symbolHeight: number = 0;
     private _finalPosY: number = 0;
     private _initialPosY: number = 0;
 
     private _canSpin : boolean = false;
     private _canStop : boolean = false;
-    private _spinTime : number = 5;
 
-    private _maxSpeed : number = 1000;
+    private _currentReelSpeed : number = 0;
+
+    private _reelAnimation : Animation = null;
 
     private setReelProperties(symbolAmmount: number) {
-        this._symbols = this.node.children;
+        this._symbols = this.symbolContent.children;
         //Tamaño del simbolo (Hecho para que todos sean iguales)
         this._symbolHeight =  this._symbols[0].getComponent(UITransform).contentSize.height;
         //Spacing del layout
-        this._symbolSpacing = this.getComponent(Layout).spacingY;
+        this._symbolSpacing = this.symbolContent.getComponent(Layout).spacingY;
         //Espaciado entre simbolos
         this._totalSpacing = this._symbolHeight + this._symbolSpacing;
         //Posición de spawn de los simbolos
         this._initialPosY = this._symbols[0].position.y + this._totalSpacing;
         //Posición de despawn de los simbolos
         this._finalPosY = this._initialPosY - (this._totalSpacing * symbolAmmount);
+        //Animación de los reels
+        this._reelAnimation = this.symbolContent.getComponent(Animation);
     }
 
     public createSymbols(symbolAmmount: number) {
         for (let i = 0; i < symbolAmmount; i++) {
             let newSymbol= instantiate(this.symbolPrefab);
-            newSymbol.parent = this.node;
+            newSymbol.parent = this.symbolContent;
             this.updateSymbol(newSymbol,null);
         }
         //Hago Update del Layout para actualizar las posiciones de los símbolos:
-        this.node.getComponent(Layout).updateLayout();
+        this.symbolContent.getComponent(Layout).updateLayout();
         this.setReelProperties(symbolAmmount);
     }
 
-    startSpin() {
-        if (this._canSpin) return;
+    public playReelAnimation(id: number) {
+        const clip = this._reelAnimation.clips[id].name
+        this._reelAnimation.play(clip);
+    }
 
-        log(`Reel ${this.reelId}: inicio de giro`);
-        //TWEEN DE VELOCIDAD
-        this.reelSpeed = this._maxSpeed;
+    startSpin(finalSpeed:number, time:number) {
+        if (this._canSpin) return;
         this._canSpin = true;
+        this.playReelAnimation(0);
+        log(`Reel ${this.reelId}: inicio de giro`);
+
+        //Incremento de la velocidad
+        const increaseState: { speed: number } = { speed: this._currentReelSpeed };
+
+        tween(increaseState)
+            .to(time, { speed: finalSpeed }, {
+                easing:"quadOut",
+                onUpdate: () => {
+                    this._currentReelSpeed = increaseState.speed;
+                },
+                onComplete: () => {
+                    this._currentReelSpeed = Math.round(finalSpeed);
+                }
+            })
+            .start();
     }
 
     update(deltaTime: number) {
@@ -99,7 +120,7 @@ export class ReelController extends Component {
             const currentPos = symbol.position;
 
             // Movimiento de los simbolos
-            const posY = currentPos.y - this.reelSpeed * deltaTime;
+            const posY = currentPos.y - this._currentReelSpeed * deltaTime;
             symbol.setPosition(currentPos.x, posY, currentPos.z);
 
             // Si pasa el límite inferior, recolocar arriba
@@ -107,10 +128,12 @@ export class ReelController extends Component {
 
                 // Parada de los reels si _canStop
                 if (this._canStop) {
+                    //Animación reel
+                    this.playReelAnimation(1);
                     //Reseteamos boleanas
                     this._canStop = false;
                     this._canSpin = false;
-                    this.reelSpeed = 0;
+                    this._currentReelSpeed = 0;
 
                     //Actualizar posiciones del array de simbolos
                     this._symbols = this.getNewSymbolPosition(i);
@@ -176,13 +199,23 @@ export class ReelController extends Component {
         }
     }
 
-    public stopSpin() {
+    public stopSpin(finalSpeed: number, time: number) {
         if(!this._canSpin) return;
-        //TWEEN BAJAR VELOCIDAD
-        this._canStop = true;
+
+        //Decremento de la velocidad
+        const decreaseState: { speed: number } = { speed: this._currentReelSpeed };
+        tween(decreaseState)
+            .to(time, { speed: finalSpeed }, {
+                easing:"quadOut",
+                onUpdate: () => {
+                    this._currentReelSpeed = decreaseState.speed;
+                },
+                onComplete: () => {
+                    this._canStop = true;
+                }
+            })
+            .start();
     }
-
-
 
 }
 

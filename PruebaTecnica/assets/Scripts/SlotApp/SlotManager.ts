@@ -46,7 +46,12 @@ export class SlotManager extends Component {
     // Tiempos y animaciones
     @property public reelDelay: number = 0;
     @property public spinDuration: number = 0;
+    @property public decreaseSpinDuration: number = 0;
+    @property public increaseSpinDuration: number = 0;
     @property public balanceIncrementTime: number = 0;
+
+    @property public reelSpeed: number = 0;
+
 
     // Valores de juego
     @property public balance: number = 0;
@@ -96,12 +101,12 @@ export class SlotManager extends Component {
 
             this.scheduleOnce(() => {
                 //SPIN de los reels
-                reel.getComponent(ReelController).startSpin();
+                reel.getComponent(ReelController).startSpin(this.reelSpeed, this.increaseSpinDuration);
             }, startDelay);
 
             this.scheduleOnce(() => {
                 //STOP de los reels
-                reel.getComponent(ReelController).stopSpin();
+                reel.getComponent(ReelController).stopSpin(400, this.decreaseSpinDuration);
             }, stopDelay);
         }
     }

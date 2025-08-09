@@ -24,11 +24,11 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 40
+      "__id__": 42
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 41
+      "__id__": 43
     },
     "_id": "0c033b17-589c-44b2-ad1f-65a5c88863bc"
   },
@@ -50,13 +50,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 37
-      },
-      {
-        "__id__": 38
-      },
-      {
         "__id__": 39
+      },
+      {
+        "__id__": 40
+      },
+      {
+        "__id__": 41
       }
     ],
     "_prefab": null,
@@ -190,10 +190,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 35
+        "__id__": 36
       },
       {
-        "__id__": 36
+        "__id__": 37
+      },
+      {
+        "__id__": 38
       }
     ],
     "_prefab": null,
@@ -387,7 +390,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 34
+        "__id__": 35
       }
     ],
     "_prefab": null,
@@ -537,7 +540,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1200,
-      "height": 700
+      "height": 880
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -570,8 +573,8 @@
     "_isAbsBottom": true,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
-    "_originalWidth": 500,
-    "_originalHeight": 400,
+    "_originalWidth": 1200,
+    "_originalHeight": 700,
     "_alignMode": 2,
     "_lockFlags": 0,
     "_id": "e1qEE0aRVMNZdg/327/TY8"
@@ -647,7 +650,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1200,
-      "height": 700
+      "height": 880
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -710,8 +713,8 @@
     "_target": null,
     "_left": 100,
     "_right": 710,
-    "_top": 190,
-    "_bottom": 190,
+    "_top": 100,
+    "_bottom": 100,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -748,6 +751,9 @@
       },
       {
         "__id__": 26
+      },
+      {
+        "__id__": 34
       }
     ],
     "_prefab": null,
@@ -1091,7 +1097,10 @@
     "reelAmmount": 3,
     "reelDelay": 2,
     "spinDuration": 3,
+    "decreaseSpinDuration": 2,
+    "increaseSpinDuration": 1,
     "balanceIncrementTime": 2,
+    "reelSpeed": 3000,
     "balance": 100,
     "currentBet": 10,
     "_id": "61QP+6zNBBl4j89l4LVnho"
@@ -1116,8 +1125,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -186.54000000000002,
-      "y": -424.644,
+      "x": 441.327,
+      "y": -391.279,
       "z": 0
     },
     "_lrot": {
@@ -1248,6 +1257,37 @@
     "_id": "c04MNgjelFXrBezllCMBSM"
   },
   {
+    "__type__": "cc.Layout",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 20
+    },
+    "_enabled": false,
+    "__prefab": null,
+    "_resizeMode": 0,
+    "_layoutType": 1,
+    "_cellSize": {
+      "__type__": "cc.Size",
+      "width": 40,
+      "height": 40
+    },
+    "_startAxis": 0,
+    "_paddingLeft": 0,
+    "_paddingRight": 0,
+    "_paddingTop": 0,
+    "_paddingBottom": 0,
+    "_spacingX": 0,
+    "_spacingY": 0,
+    "_verticalDirection": 1,
+    "_horizontalDirection": 0,
+    "_constraint": 0,
+    "_constraintNum": 2,
+    "_affectedByScale": false,
+    "_isAlign": false,
+    "_id": "2aTXUw5zRNj4cbvpYFuiTe"
+  },
+  {
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
@@ -1321,6 +1361,17 @@
     "_id": "0235a1F+pEap7LmWJqFr4h"
   },
   {
+    "__type__": "5c816jH+81KernhB5oUtOBq",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 5
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "abC+Up5ZhD6LNnuXhD10mM"
+  },
+  {
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
@@ -1392,19 +1443,19 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 42
-    },
-    "shadows": {
-      "__id__": 43
-    },
-    "_skybox": {
       "__id__": 44
     },
-    "fog": {
+    "shadows": {
       "__id__": 45
     },
-    "octree": {
+    "_skybox": {
       "__id__": 46
+    },
+    "fog": {
+      "__id__": 47
+    },
+    "octree": {
+      "__id__": 48
     }
   },
   {
