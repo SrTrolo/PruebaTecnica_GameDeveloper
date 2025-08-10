@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, Color, SpriteFrame } from 'cc';
+import { _decorator, Component, SpriteFrame } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
@@ -21,7 +21,6 @@ export class Paytable extends Component {
 
     public static Paytable: SymbolData[] = [];
 
-
     onLoad() {
         // Creación de paytable
         Paytable.Paytable = [
@@ -37,6 +36,7 @@ export class Paytable extends Component {
     }
 }
 
+//Constructor paytable
 export class SymbolData{
     public symbolID: number;
     public symbolName: string;
@@ -50,7 +50,6 @@ export class SymbolData{
         this.symbolValue = symbolValue;
     }
 }
-
 
 /**
  * [1] Class member could be defined like this.

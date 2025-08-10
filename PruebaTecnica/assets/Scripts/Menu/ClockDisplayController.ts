@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, Label } from 'cc';
+import { _decorator, Component, Label } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
@@ -25,13 +25,13 @@ export class ClockDisplayController extends Component {
     private _syncTimer: number = 60; //Petición cada 1 min
     private _currentTime: Date;
 
-
-    // Reloj interno (Date) que iremos incrementando cada segundo
     start() {
         this.loadURL();
+
+        //Petición de sincronización automática
         this.schedule(() => this.loadURL(), this._syncTimer);
 
-        // Avanza el reloj interno cada segundo
+        // Reloj interno que se actualizará cada segundo hasta la siguiente petición
         this.schedule(function() {
             if(!this._currentTime) return;
             this._currentTime.setSeconds(this._currentTime.getSeconds() + 1);
@@ -41,17 +41,21 @@ export class ClockDisplayController extends Component {
     public loadURL(){
         fetch(this.url.toString())
             .then((response: Response) => {
+                //Devolvemos la respuesta en formato json
                 return response.json()
             })
             .then((data) => {
+                //Se ha podido sincroniar, actualizamos reloj
                 this._currentTime = new Date(data.datetime);
                 this.updateClock(this._currentTime);
             })
             .catch(() => {
-                //Soy puto
+                //No se ha podido sincronizar con la URL
             });
     }
+
     private updateClock(time: Date){
+        //Actualización visual del reloj
         const hh = String("0" + time.getHours()).slice(-2);
         const mm = String("0" + time.getMinutes()).slice(-2);
         const ss = String("0" + time.getSeconds()).slice(-2);

@@ -1,5 +1,5 @@
 
-import {_decorator, Component, Node, EventTarget, log, Prefab, instantiate, Layout, Label, tween, Button, EventHandler} from 'cc';
+import {_decorator, Component, Node, EventTarget, Prefab, instantiate, Label, tween, Button, EventHandler} from 'cc';
 import {ReelController} from "db://assets/Scripts/Slot/ReelController";
 import {Paytable} from "db://assets/Scripts/Slot/Paytable";
 import {PaytableSymbolController} from "db://assets/Scripts/Slot/PaytableSymbolController";
@@ -45,28 +45,26 @@ export class SlotManager extends Component {
     // Configuración del juego
     @property public symbolAmmount: number = 0;
     @property public reelAmmount: number = 0;
+    @property public reelSpeed: number = 0;
+    @property public spinDuration: number = 0;
 
     // Tiempos y animaciones
     @property public reelDelay: number = 0;
-    @property public spinDuration: number = 0;
     @property public decreaseSpinDuration: number = 0;
     @property public increaseSpinDuration: number = 0;
     @property public balanceIncrementTime: number = 0;
 
-    @property public reelSpeed: number = 0;
-
 
     // Valores de juego
     @property public balance: number = 0;
-    @property public currentBet: number = 10;
+    @property public spinCost: number = 10;
 
     onLoad() {
         SlotManager.instance = this
         // Suscribirse al evento "reelStopped" (cada Reel avisará cuando termine)
         this.eventTarget.on('reelStopped', this.onReelStopped, this);
-
-        this.balanceLabel.getComponent(Label).string = this.balance.toString();
-
+        //Actualización del texto del balance
+        this.balanceLabel.getComponent(Label).string = `BALANCE:\n${this.balance}`;
     }
 
     start() {
@@ -86,27 +84,29 @@ export class SlotManager extends Component {
     }
 
     private createPaytable(){
+        //Instanciación de los simbolos disponibles de la paytable
         for (let i = 0; i < Paytable.Paytable.length; i++) {
             let newPaytableSymbol = instantiate(this.paytableSymbolPrefab);
             newPaytableSymbol.parent = this.paytableSymbolContent;
 
             const data = Paytable.Paytable[i];
+            //Pasamos los datos de la paytable
             newPaytableSymbol.getComponent(PaytableSymbolController).updatePaytableSymbol(
                 data.symbolSprite,
                 data.symbolValue,
-                this.currentBet,
+                this.spinCost,
                 this.reelAmmount,
             );
+            //Pasarle el valor del simbolo al botón como customEventData
             const newPaytableSymbolButton = newPaytableSymbol.children[0].getComponent(Button);
             if (newPaytableSymbolButton) {
+                const event = new EventHandler();
+                event.target = this.node;
+                event.component = 'SlotManager';
+                event.handler = 'startSpin';
+                event.customEventData = i.toString();
 
-                const eh = new EventHandler();
-                eh.target = this.node;
-                eh.component = 'SlotManager';
-                eh.handler = 'startSpin';
-                eh.customEventData = i.toString();
-
-                newPaytableSymbolButton.clickEvents.push(eh);
+                newPaytableSymbolButton.clickEvents.push(event);
             }
         }
     }
@@ -118,14 +118,14 @@ export class SlotManager extends Component {
 
         this.currentState = SlotState.Spinning;
 
-        //parsear el string a int
+        // Pasamos a INT el customEventData que recibimos del botón SPIN o de los botones de la Paytable
         const forceSymbolID = parseInt(customEventData);
 
         // Iniciar cada reel
         for (let i = 0; i < this.reelsContent.children.length; i++) {
             const reel = this.reelsContent.children[i];
 
-            //Resetear Animaciones de los símbolos;
+            //Resetear Animaciones de los símbolos premiados;
             reel.getComponent(ReelController).resetAllAnimations();
 
             //Delay entre los reels al iniciar y al parar
@@ -133,7 +133,7 @@ export class SlotManager extends Component {
             const stopDelay = this.spinDuration + startDelay;
 
             this.scheduleOnce(() => {
-                //SPIN de los reels
+                //SPIN de los reels con el valor que recibimos del botón SPIN o de los botones de la Paytable
                 reel.getComponent(ReelController).startSpin(this.reelSpeed, this.increaseSpinDuration, forceSymbolID);
             }, startDelay);
 
@@ -146,18 +146,17 @@ export class SlotManager extends Component {
 
     //Booleana para comprobar si puedo pagar el SPIN
     private canPay(): boolean {
-        if(this.balance - this.currentBet < 0) {
-            log("no puedo spinear");
+        if(this.balance - this.spinCost < 0) {
+            //No tenemos dinero suficiente
             return false;
         }
-        this.balance = this.balance - this.currentBet;
-        this.balanceLabel.getComponent(Label).string = this.balance.toString();
+        this.balance = this.balance - this.spinCost;
+        this.balanceLabel.getComponent(Label).string = `BALANCE:\n${this.balance}`;
         return true;
     }
 
     // Callback cada vez que un Reel termina su giro
     private onReelStopped(reelId: number) {
-        //console.log(`Reel ${reelId} detenido`);
         this.stoppedReelsCount++;
 
         // Verificar si todos los reels han parado
@@ -170,66 +169,58 @@ export class SlotManager extends Component {
 
     private calculateResult() {
         const reels = this.reelsContent.children;
+        //Linia que vamos a comparar
         const line = 2;
 
         //Recogo el simbolo del reel 0;
         const winningID = reels[0].getComponent(ReelController).getSymbolIDAt(line);
-        //log(winningID);
 
         for (let i = 1; i < reels.length; i++) {
             const reelController = reels[i].getComponent(ReelController);
             const currentID = reelController.getSymbolIDAt(line);
 
             if (currentID !== winningID) {
-                console.log('❌ No hay línea ganadora.');
+                //No hay premio
                 this.currentState = SlotState.Idle;
                 return;
             }
         }
-
+        //Si se termina el flujo, todos los reels tienen el mismo simbolo = hay premio
         const winningSymbol = Paytable.Paytable[winningID];
         const totalWin = winningSymbol.symbolValue * reels.length;
 
+        //Actualizamos balance
         this.updateBalance(totalWin);
 
         //Animar simbolos de la linia premiada
         reels.forEach((reel) => {
             reel.getComponent(ReelController).animateSymbol(line, 1);
         })
-
-        console.log(`🎉 Línea ganadora con símbolo "${winningSymbol.symbolName}"`);
-        console.log(`💰 Premio: ${winningSymbol.symbolValue} x ${reels.length} = ${totalWin}`);
-
-
     }
 
     //Función para actualizar el balance
-    //AÑADIR TWEEN
     private updateBalance(ammount: number) {
         const startBalance = this.balance;
         const finalBalance = this.balance + ammount;
 
         const label = this.balanceLabel.getComponent(Label);
 
+        //Animación de incremento del balance a balanceFinal
         const counter = { value: startBalance };
-
         tween(counter)
             .to(this.balanceIncrementTime, { value: finalBalance }, {
                 onUpdate: () => {
+                    //Redondear siempre a numero entero
                     this.balance = Math.round(counter.value);
-                    label.string = this.balance.toString();
+                    label.string = `BALANCE:\n${this.balance}`;
                 },
                 onComplete: () => {
+                    //Forzamos actualización del balance y cambiamos de estado
                     this.balance = finalBalance;
                     this.currentState = SlotState.Idle;
                 }
             })
             .start();
-
-
-        //this.balance = this.balance + ammount;
-        //this.balanceLabel.getComponent(Label).string = this.balance.toString();
-
     }
 
 }

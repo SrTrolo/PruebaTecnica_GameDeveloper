@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, Label, JsonAsset, resources, log, instantiate, Prefab, Button, Sprite, Color, CCBoolean} from 'cc';
+import { _decorator, Component, Node, Label, JsonAsset, resources, instantiate, Prefab, Button, Sprite, Color, Animation} from 'cc';
 
 const { ccclass, property } = _decorator;
 
@@ -15,12 +15,13 @@ const { ccclass, property } = _decorator;
  *
  */
 
+//Contenedor de las preguntass
 class Question {
     Pregunta: string;
     Respuestas: string[];
     correctIndex: number;
 }
-
+//Lista de preguntas
 class QuizData {
     quiz: Question[];
 }
@@ -28,23 +29,27 @@ class QuizData {
 @ccclass('QuizController')
 export class QuizController extends Component {
 
+    // Datos internos
     private quizData: QuizData = null;
     private currentQuestionIndex: number = 0;
 
+    // Estado
+    private canAnswer: boolean = false;
+
+    // UI y referencias
     @property(Label) public questionText: Label = null;
     @property(Node) public answerButtonContent: Node = null;
     @property(Prefab) public answerButtonPrefab: Prefab = null;
-    @property(CCBoolean) private canAnswer: boolean = false;
+    @property([Color]) public butonColors: Color[];
 
     protected onLoad() {
-        //globalThis.quiz = this;
         this.loadQuizJson();
     }
 
     public loadQuizJson(){
         resources.load("Quiz/Quiz", JsonAsset, (err, jsonAsset)=>{
             if (err) {
-                log("Error al cargar el json", err);
+                //No se ha podido cargar el json
                 return;
             }
             this.quizData = jsonAsset.json as QuizData;
@@ -56,92 +61,107 @@ export class QuizController extends Component {
     }
     private showCurrentQuestion() {
         if(!this.quizData) return;
-
-        const question = this.quizData.quiz[this.currentQuestionIndex];
-        log("Current Question", question);
-        question.Respuestas.forEach((answer, i) => {
-            log(`${i}: ${answer}`);
-        })
         this.updateUI();
     }
+
+    private updateUI() {
+        //Mostrar siguiente pregunta
+        const currentQuestion= this.quizData.quiz[this.currentQuestionIndex];
+
+        //Actualización y animación de la pregunta
+        this.questionText.string = currentQuestion.Pregunta.toString();
+        this.questionText.node.getComponent(Animation).play();
+
+        //Actualización de las respuestas con sistema de pool dinamica
+        const totalAnswers = currentQuestion.Respuestas.length;
+        currentQuestion.Respuestas.forEach((answer, i) => {
+            this.changeButtonState(true);
+            //Creación de botón de respuesta en caso de no existir suficientes
+            if (!this.answerButtonContent.children[i]) {
+                let newAswerButton= instantiate(this.answerButtonPrefab);
+                newAswerButton.parent = this.answerButtonContent;
+
+                //Aplicar evento al pulsar
+                const answerButtonComponent = newAswerButton.getComponent(Button);
+                if (answerButtonComponent) {
+                    answerButtonComponent.node.on(Button.EventType.CLICK, () => {this.answerQuestionHandler(i)}, this);
+                }
+            }
+            //Si existe, activar y actualizar
+            const answerButton = this.answerButtonContent.children[i];
+            answerButton.active = true;
+            this.changeButtonColor(i, 2);
+            if (answerButton.children[0].getComponent(Label)) {
+                answerButton.children[0].getComponent(Label).string = answer;
+            }
+        });
+
+        //Desactivar nodos que no necesitemos
+        for (let j = totalAnswers; j < this.answerButtonContent.children.length; j++) {
+            this.answerButtonContent.children[j].active = false;
+        }
+
+        //Al finalizar, podemos contestar
+        this.canAnswer = true;
+    }
+
     public answerQuestion(selectedIndex: number) {
         if (!this.quizData) return;
         this.canAnswer = false;
         const question = this.quizData.quiz[this.currentQuestionIndex];
 
         if (selectedIndex === question.correctIndex) {
-            log("¡Respuesta correcta!");
-            this.changeButtonColor(selectedIndex, Color.GREEN);
+            //La respuesta es correcta. Resaltamos el color del botón correcto
+            this.changeButtonColor(selectedIndex, 1);
 
         } else {
-            log("Incorrecto. La respuesta correcta era: " + `${question.Respuestas[question.correctIndex]}`);
-            this.changeButtonColor(selectedIndex, Color.RED);
-            this.changeButtonColor(question.correctIndex, Color.GREEN);
+            //La respuesta es incorrecta. Resaltamos el botón pulsado y el botón correcto
+            this.changeButtonColor(selectedIndex, 0);
+            this.changeButtonColor(question.correctIndex, 1);
         }
+
+        //Esperamos dos segundos para cambiar de estado
         this.scheduleOnce(function() {
             this.nextQuestion();
         }, 2);
     }
+
     private nextQuestion() {
         this.currentQuestionIndex++;
         if (this.currentQuestionIndex < this.quizData.quiz.length) {
+            //Repetimos el flujo
             this.showCurrentQuestion();
         }
         else {
-            log("¡Juego Completado!");
+            //Si no hay más preguntas, se finaliza el juego
             this.answerButtonContent.active = false;
             this.questionText.string = ("¡Juego Completado!");
         }
     }
-    private updateUI() {
-        const currentQuestion= this.quizData.quiz[this.currentQuestionIndex];
-        this.questionText.string = currentQuestion.Pregunta.toString();
 
-        const totalAnswers = currentQuestion.Respuestas.length;
-
-        currentQuestion.Respuestas.forEach((answer, i) => {
-            this.changeButtonState(true);
-            if (!this.answerButtonContent.children[i]) {
-                let newAswerButton= instantiate(this.answerButtonPrefab);
-                newAswerButton.parent = this.answerButtonContent;
-
-                const answerButtonComponent = newAswerButton.getComponent(Button);
-                if (answerButtonComponent) {
-                    answerButtonComponent.node.on(Button.EventType.CLICK, () => {this.answerQuestionHandler(i)}, this);
-                }
-            }
-
-            const answerButton = this.answerButtonContent.children[i];
-            answerButton.active = true;
-            this.changeButtonColor(i, Color.WHITE);
-            if (answerButton.children[0].getComponent(Label)) {
-                answerButton.children[0].getComponent(Label).string = answer;
-            }
-        });
-
-        for (let j = totalAnswers; j < this.answerButtonContent.children.length; j++) {
-            this.answerButtonContent.children[j].active = false;
-        }
-
-        this.canAnswer = true;
-    }
+    //Handeler para que cada botón sepa que id de respuesta es
     private answerQuestionHandler(_number: number) {
         if(!this.canAnswer) return;
         this.answerQuestion(_number);
         this.changeButtonState(false);
     }
-    private changeButtonColor(buttonID: number, butonColor:Color)
+
+    //Cambio de color de los botones
+    private changeButtonColor(buttonID: number, butonColor:number)
     {
-        this.answerButtonContent.children[buttonID].getComponent(Sprite).color = butonColor;
+        this.answerButtonContent.children[buttonID].getComponent(Sprite).color = this.butonColors[butonColor];
+        //0 -> ROJO
+        //1 -> VERDE
+        //2 -> BLANCO
     }
+
+    //Cambiar interactuación de los botones
     private changeButtonState(isActive : boolean) {
         this.answerButtonContent.children.forEach((answer) => {
             answer.getComponent(Button).interactable = isActive;
         })
     }
 }
-
-
 
 /**
  * [1] Class member could be defined like this.

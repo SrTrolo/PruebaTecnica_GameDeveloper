@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, ProgressBar, tween } from 'cc';
+import { _decorator, Component, ProgressBar, tween } from 'cc';
 import {SceneManager} from "db://assets/Scripts/SceneManager";
 const { ccclass, property } = _decorator;
 
@@ -25,9 +25,9 @@ export class ProgressBarController extends Component {
     start () {
         this.progressBar.progress = 0;
         tween(this.progressBar)
-            .to(5, { progress : 1 }) //
+            .to(5, { progress : 1 })
             .call(() => {
-                this.getComponent(SceneManager).goToScene(this.nextScene.toString());
+                this.getComponent(SceneManager).goToScene(null, this.nextScene.toString());
             })
             .start();
     }

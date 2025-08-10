@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, SpriteFrame, Sprite, Animation } from 'cc';
+import { _decorator, Component, SpriteFrame, Sprite, Animation } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**

@@ -4,7 +4,6 @@ import {
     Component,
     Node,
     tween,
-    log,
     UITransform,
     Layout,
     Prefab,
@@ -33,27 +32,31 @@ const { ccclass, property } = _decorator;
  
 @ccclass('ReelController')
 export class ReelController extends Component {
-    @property reelId: number = 0;
+    @property
+    public reelId: number = 0;
 
-    @property(Prefab) public symbolPrefab: Prefab = null;
-    @property(Node) public symbolContent: Node = null;
+    @property(Prefab)
+    public symbolPrefab: Prefab = null;
 
+    @property(Node)
+    public symbolContent: Node = null;
+
+    // Referencias y datos internos
     private _symbols: Node[] = [];
+    private _reelAnimation: Animation = null;
 
+    // Parámetros numéricos
     private _symbolSpacing: number = 0;
-    private _totalSpacing : number = 0;
+    private _totalSpacing: number = 0;
     private _symbolHeight: number = 0;
     private _finalPosY: number = 0;
     private _initialPosY: number = 0;
+    private _currentReelSpeed: number = 0;
+    private _forceSymbol: number = -1;
 
-    private _canSpin : boolean = false;
-    private _canStop : boolean = false;
-
-    private _currentReelSpeed : number = 0;
-
-    private _reelAnimation : Animation = null;
-
-    private _forceSymbol : number = -1;
+    // Booleanas de estado
+    private _canSpin: boolean = false;
+    private _canStop: boolean = false;
 
     private setReelProperties(symbolAmmount: number) {
         this._symbols = this.symbolContent.children;
@@ -96,11 +99,11 @@ export class ReelController extends Component {
 
         //Animación del reel
         this.playReelAnimation(0);
-        log(`Reel ${this.reelId}: inicio de giro`);
+
+        //Inicio del spin
 
         //Incremento de la velocidad
         const increaseState: { speed: number } = { speed: this._currentReelSpeed };
-
         tween(increaseState)
             .to(time, { speed: finalSpeed }, {
                 easing:"quadOut",
@@ -119,7 +122,6 @@ export class ReelController extends Component {
         if (!this._canSpin) return;
 
         for (let i = 0; i < this._symbols.length; i++) {
-
             const symbol = this._symbols[i];
             const currentPos = symbol.position;
 
@@ -129,11 +131,11 @@ export class ReelController extends Component {
 
             // Si pasa el límite inferior, recolocar arriba
             if (posY < this._finalPosY) {
-
                 // Parada de los reels si _canStop
                 if (this._canStop) {
                     //Animación reel
                     this.playReelAnimation(1);
+
                     //Reseteamos boleanas
                     this._canStop = false;
                     this._canSpin = false;
@@ -149,14 +151,14 @@ export class ReelController extends Component {
                         newSymbol.setPosition(0, y, 0);
                     }
                     //Una vez colocados, informar a SlotManager de que ha terminado el SPIN
-                    log(`Reel ${this.reelId}: fin de giro`);
                     SlotManager.instance.eventTarget.emit('reelStopped', this.reelId);
-
+                    //Final del SPIN
                 }
                 else{
                     //Colocar simbolo correctamente
                     const resetY = posY + this._totalSpacing * this._symbols.length;
                     symbol.setPosition(currentPos.x, resetY, currentPos.z);
+                    //Cambiar simbolo
                     this.updateSymbol(symbol);
                 }
             }
@@ -164,17 +166,20 @@ export class ReelController extends Component {
     }
 
     private updateSymbol(symbol: Node) {
-        //Escoger simbolo random de la paytable
+        //Funcion que decide que simbolo printear.
+        // Si el valor es < 0, se hará un random (valor que nos envia el botón spin)
+        //Cualquier otro valor se igualará al simbol en la paytable (valor que nos envia si pulsamos un símbolo en la paytalbe)
+
         const paytable = Paytable.Paytable;
         let symbolID = this._forceSymbol;
 
         if(this._forceSymbol < 0){
+            //Escoger simbolo random de la paytable
             symbolID = randomRangeInt(0, paytable.length);
         }
 
         const data = paytable[symbolID];
         symbol.getComponent(SymbolController).updateSymbol(data.symbolID, data.symbolSprite);
-
     }
 
     public getNewSymbolPosition(startIndex: number): Node[] {
@@ -182,23 +187,11 @@ export class ReelController extends Component {
         const newSymbols = [];
 
         for (let i = 1; i < this._symbols.length + 1; i++) {
+            //Logica para calcular el nuevo int del array de simbolos
             const pos = (startIndex + i) % this._symbols.length;
             newSymbols.push(this._symbols[pos]);
         }
-
         return newSymbols;
-    }
-
-    public getSymbolIDAt(symbolIndex: number): number {
-        return this._symbols[symbolIndex].getComponent(SymbolController).getSymbolID();
-    }
-    public animateSymbol(symbolIndex: number, animationID: number) {
-        this._symbols[symbolIndex].getComponent(SymbolController).changeAnimation(animationID);
-    }
-    public resetAllAnimations() {
-        for (let i = 0; i < this._symbols.length; i++) {
-            this._symbols[i].getComponent(SymbolController).changeAnimation(0);
-        }
     }
 
     public stopSpin(finalSpeed: number, time: number) {
@@ -219,6 +212,17 @@ export class ReelController extends Component {
             .start();
     }
 
+    public getSymbolIDAt(symbolIndex: number): number {
+        return this._symbols[symbolIndex].getComponent(SymbolController).getSymbolID();
+    }
+    public animateSymbol(symbolIndex: number, animationID: number) {
+        this._symbols[symbolIndex].getComponent(SymbolController).changeAnimation(animationID);
+    }
+    public resetAllAnimations() {
+        for (let i = 0; i < this._symbols.length; i++) {
+            this._symbols[i].getComponent(SymbolController).changeAnimation(0);
+        }
+    }
 }
 
 /**

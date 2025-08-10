@@ -16,8 +16,12 @@ const { ccclass, property } = _decorator;
  
 @ccclass('SceneManager')
 export class SceneManager extends Component {
-    public goToScene(scene: String) {
-        director.loadScene(scene.toString());
+    public goToScene(_event: Event, sceneName: string) {
+        director.loadScene(sceneName, (err) => {
+            if (err) {
+                console.error(`No se pudo cargar la escena "${sceneName}":`, err);
+            }
+        });
     }
 }
 
