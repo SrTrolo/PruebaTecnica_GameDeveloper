@@ -73,14 +73,11 @@
       "correctIndex": 0
     },
     {
-      "Pregunta": "¿En términos de reproducción entre humanos y Pokémon, qué Pokémon es más compatible para los Humanos?",
+      "Pregunta": "¿Qué gana a la Piedra en el juego: \nPiedra, Papel, Tijera ?",
       "Respuestas": [
-        "Mega-Lopunny",
-        "Vaporeon",
-        "FerroSeed",
-        "Lapras",
-        "Onix",
-        "Rotom\n(Ventilador)"
+        "Piedra",
+        "Papel",
+        "Tijera"
       ],
       "correctIndex": 1
     },
