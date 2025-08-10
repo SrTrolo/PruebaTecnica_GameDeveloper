@@ -1,0 +1,74 @@
+{
+  "ver": "1.0.22",
+  "importer": "image",
+  "imported": true,
+  "uuid": "39b5e77e-f8c9-45fb-a421-e12282492ba1",
+  "files": [
+    ".png",
+    ".json"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "39b5e77e-f8c9-45fb-a421-e12282492ba1@6c48a",
+      "displayName": "panelSprite",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "39b5e77e-f8c9-45fb-a421-e12282492ba1",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true
+      },
+      "ver": "1.0.21",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "39b5e77e-f8c9-45fb-a421-e12282492ba1@f9941",
+      "displayName": "panelSprite",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 0,
+        "trimY": 0,
+        "width": 687,
+        "height": 858,
+        "rawWidth": 687,
+        "rawHeight": 858,
+        "borderTop": 110,
+        "borderBottom": 110,
+        "borderLeft": 110,
+        "borderRight": 110,
+        "packable": true,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "39b5e77e-f8c9-45fb-a421-e12282492ba1@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.9",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "hasAlpha": true,
+    "redirect": "39b5e77e-f8c9-45fb-a421-e12282492ba1@f9941"
+  }
+}

@@ -26,7 +26,7 @@
     "_prefab": null,
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 61
+      "__id__": 60
     },
     "_id": "bcde0621-c0cf-4e2a-8fcb-5e62ea01daf9"
   },
@@ -48,13 +48,13 @@
     "_active": true,
     "_components": [
       {
+        "__id__": 57
+      },
+      {
         "__id__": 58
       },
       {
         "__id__": 59
-      },
-      {
-        "__id__": 60
       }
     ],
     "_prefab": null,
@@ -142,7 +142,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 596.6144200626959,
+    "_orthoHeight": 572.390977443609,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -188,13 +188,13 @@
     "_active": true,
     "_components": [
       {
+        "__id__": 54
+      },
+      {
         "__id__": 55
       },
       {
         "__id__": 56
-      },
-      {
-        "__id__": 57
       }
     ],
     "_prefab": null,
@@ -319,7 +319,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "4fff08ab-925d-4e52-aced-b2fef497ab50@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,
@@ -387,7 +387,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 54
+        "__id__": 53
       }
     ],
     "_prefab": null,
@@ -506,25 +506,25 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 0,
-      "b": 0,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
-    "_string": "Prueba técnica\nGAME DEVELOPER",
+    "_string": "Prueba técnica - GAME DEVELOPER\nAlbert Pitarque",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 81,
     "_fontSize": 80,
     "_fontFamily": "Arial",
-    "_lineHeight": 0,
+    "_lineHeight": 80,
     "_overflow": 2,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
-    "_isBold": false,
+    "_isBold": true,
     "_isUnderline": false,
     "_underlineHeight": 2,
     "_cacheMode": 0,
@@ -578,9 +578,6 @@
       },
       {
         "__id__": 52
-      },
-      {
-        "__id__": 53
       }
     ],
     "_prefab": null,
@@ -698,7 +695,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -225,
+      "x": -270,
       "y": 0,
       "z": 0
     },
@@ -811,12 +808,12 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 0,
-      "b": 0,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
-    "_string": "Quiz",
+    "_string": "QUIZ",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 71,
@@ -825,11 +822,14 @@
     "_lineHeight": 40,
     "_overflow": 2,
     "_enableWrapText": true,
-    "_font": null,
-    "_isSystemFontUsed": true,
+    "_font": {
+      "__uuid__": "4240c396-d805-40c0-b3cc-77ca35293ad4",
+      "__expectedType__": "cc.TTFFont"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_isItalic": false,
-    "_isBold": false,
+    "_isBold": true,
     "_isUnderline": false,
     "_underlineHeight": 2,
     "_cacheMode": 0,
@@ -902,16 +902,16 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
+      "r": 73,
+      "g": 217,
       "b": 255,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "4f7cf09f-32b3-4827-ade2-441596837440@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
-    "_type": 1,
+    "_type": 0,
     "_fillType": 0,
     "_sizeMode": 0,
     "_fillCenter": {
@@ -942,7 +942,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -972,7 +972,7 @@
       "a": 255
     },
     "_normalSprite": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "4f7cf09f-32b3-4827-ade2-441596837440@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_hoverSprite": {
@@ -1062,7 +1062,7 @@
     "timeLabel": {
       "__id__": 28
     },
-    "url": "https://worldtimeapi.org/api/timezone/Europe/Madrid",
+    "url": "http://worldtimeapi.org/api/timezone/Europe/Madrid",
     "_id": "e61jsXbrRJ1I+PGoCASIWs"
   },
   {
@@ -1080,22 +1080,25 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 0,
-      "b": 0,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_string": "00:00:00",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 70,
+    "_actualFontSize": 63,
     "_fontSize": 70,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
-    "_overflow": 1,
+    "_overflow": 2,
     "_enableWrapText": false,
-    "_font": null,
-    "_isSystemFontUsed": true,
+    "_font": {
+      "__uuid__": "4240c396-d805-40c0-b3cc-77ca35293ad4",
+      "__expectedType__": "cc.TTFFont"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_isItalic": false,
     "_isBold": false,
@@ -1421,7 +1424,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 225,
+      "x": 270,
       "y": 0,
       "z": 0
     },
@@ -1534,12 +1537,12 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 0,
-      "b": 0,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
-    "_string": "Slots",
+    "_string": "SLOTS",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 71,
@@ -1548,11 +1551,14 @@
     "_lineHeight": 40,
     "_overflow": 2,
     "_enableWrapText": true,
-    "_font": null,
-    "_isSystemFontUsed": true,
+    "_font": {
+      "__uuid__": "4240c396-d805-40c0-b3cc-77ca35293ad4",
+      "__expectedType__": "cc.TTFFont"
+    },
+    "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_isItalic": false,
-    "_isBold": false,
+    "_isBold": true,
     "_isUnderline": false,
     "_underlineHeight": 2,
     "_cacheMode": 0,
@@ -1626,16 +1632,16 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
+      "r": 73,
+      "g": 217,
       "b": 255,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "4f7cf09f-32b3-4827-ade2-441596837440@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
-    "_type": 1,
+    "_type": 0,
     "_fillType": 0,
     "_sizeMode": 0,
     "_fillCenter": {
@@ -1666,7 +1672,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 3,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -1696,7 +1702,7 @@
       "a": 255
     },
     "_normalSprite": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "4f7cf09f-32b3-4827-ade2-441596837440@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_hoverSprite": {
@@ -1740,8 +1746,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 950,
-      "height": 580
+      "width": 1040,
+      "height": 520
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1793,8 +1799,8 @@
     "__prefab": null,
     "_alignFlags": 45,
     "_target": null,
-    "_left": 485,
-    "_right": 485,
+    "_left": 503,
+    "_right": 503,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -1832,7 +1838,7 @@
     "_paddingRight": 50,
     "_paddingTop": 0,
     "_paddingBottom": 0,
-    "_spacingX": 50,
+    "_spacingX": 140,
     "_spacingY": 0,
     "_verticalDirection": 1,
     "_horizontalDirection": 0,
@@ -1854,7 +1860,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1920,
-      "height": 580
+      "height": 520
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1876,8 +1882,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 300,
-    "_bottom": 200,
+    "_top": 330,
+    "_bottom": 230,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -1891,45 +1897,6 @@
     "_alignMode": 2,
     "_lockFlags": 0,
     "_id": "25ifMAiGhEkpez6qmP3a2d"
-  },
-  {
-    "__type__": "cc.Sprite",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 15
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "_visFlags": 0,
-    "_customMaterial": null,
-    "_srcBlendFactor": 2,
-    "_dstBlendFactor": 4,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 145,
-      "b": 145,
-      "a": 255
-    },
-    "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
-      "__expectedType__": "cc.SpriteFrame"
-    },
-    "_type": 1,
-    "_fillType": 0,
-    "_sizeMode": 0,
-    "_fillCenter": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_fillStart": 0,
-    "_fillRange": 0,
-    "_isTrimmedMode": true,
-    "_useGrayscale": false,
-    "_atlas": null,
-    "_id": "65qpm3Vx5CHJV2FpmpLXUi"
   },
   {
     "__type__": "cc.UITransform",
@@ -2084,19 +2051,19 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 62
+      "__id__": 61
     },
     "shadows": {
-      "__id__": 63
+      "__id__": 62
     },
     "_skybox": {
-      "__id__": 64
+      "__id__": 63
     },
     "fog": {
-      "__id__": 65
+      "__id__": 64
     },
     "octree": {
-      "__id__": 66
+      "__id__": 65
     }
   },
   {
