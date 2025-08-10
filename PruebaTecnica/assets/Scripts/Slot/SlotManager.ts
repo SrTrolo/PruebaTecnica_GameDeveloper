@@ -1,9 +1,8 @@
 
 import {_decorator, Component, Node, EventTarget, log, Prefab, instantiate, Layout, Label, tween, Button, EventHandler} from 'cc';
-import {ReelController} from "db://assets/Scripts/SlotApp/ReelController";
-import {Paytable} from "db://assets/Scripts/SlotApp/Paytable";
-import {PaytableSymbolController} from "db://assets/Scripts/SlotApp/PaytableSymbolController";
-import {SymbolController} from "db://assets/Scripts/SlotApp/SymbolController";
+import {ReelController} from "db://assets/Scripts/Slot/ReelController";
+import {Paytable} from "db://assets/Scripts/Slot/Paytable";
+import {PaytableSymbolController} from "db://assets/Scripts/Slot/PaytableSymbolController";
 const { ccclass, property } = _decorator;
 
 /**

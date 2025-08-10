@@ -1,34 +1,24 @@
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, director } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
  * Predefined variables
- * Name = GameManager
- * DateTime = Sat Mar 08 2025 16:43:43 GMT+0100 (hora estándar de Europa central)
+ * Name = SceneManager
+ * DateTime = Sun Aug 10 2025 13:28:21 GMT+0200 (hora de verano de Europa central)
  * Author = AlbertPitarque
- * FileBasename = GameManager.ts
- * FileBasenameNoExtension = GameManager
- * URL = db://assets/Scripts/GameManager.ts
+ * FileBasename = SceneManager.ts
+ * FileBasenameNoExtension = SceneManager
+ * URL = db://assets/Scripts/SceneManager.ts
  * ManualUrl = https://docs.cocos.com/creator/3.4/manual/en/
  *
  */
  
-@ccclass('GameManager')
-export class GameManager extends Component {
-    // [1]
-    // dummy = '';
-    // [2]
-    // @property
-    // serializableDummy = 0;
-
-    start () {
-        // [3]
+@ccclass('SceneManager')
+export class SceneManager extends Component {
+    public goToScene(scene: String) {
+        director.loadScene(scene.toString());
     }
-
-    // update (deltaTime: number) {
-    //     // [4]
-    // }
 }
 
 /**

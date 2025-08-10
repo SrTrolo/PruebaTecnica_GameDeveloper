@@ -12,8 +12,8 @@ import {
     instantiate,
     Animation
 } from 'cc';
-import {SlotManager} from "db://assets/Scripts/SlotApp/SlotManager";
-import {Paytable} from "db://assets/Scripts/SlotApp/Paytable";
+import {SlotManager} from "db://assets/Scripts/Slot/SlotManager";
+import {Paytable} from "db://assets/Scripts/Slot/Paytable";
 import {SymbolController} from "./SymbolController";
 
 const {randomRangeInt} = math;
