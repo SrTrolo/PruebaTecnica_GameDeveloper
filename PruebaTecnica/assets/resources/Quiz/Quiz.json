@@ -14,7 +14,10 @@
       "Respuestas": [
         "2",
         "3",
-        "4"
+        "4",
+        "5",
+        "6",
+        "9"
       ],
       "correctIndex": 2
     },
@@ -68,7 +71,8 @@
       "Respuestas": [
         "10",
         "5",
-        "14"
+        "14",
+        "19"
       ],
       "correctIndex": 0
     },
@@ -86,7 +90,8 @@
       "Respuestas": [
         "Dióxido de carbono",
         "Oxígeno",
-        "Hidrógeno"
+        "Hidrógeno",
+        "Ninguna de las anteriores"
       ],
       "correctIndex": 1
     }
