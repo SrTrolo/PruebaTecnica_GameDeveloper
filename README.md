@@ -26,7 +26,7 @@ El proyecto se compone de **4 escenas principales**, cada una con su funcionalid
 **Función:** Mostrar el logotipo y una barra de carga.  
 
 **Características:**
-- Animación FadeIn del logo y carga progresiva de la barra.
+- Animación *fade in* del logo y carga progresiva de la barra.
 - Transición automática hacia la escena **Menú**.
 
 ---
