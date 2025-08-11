@@ -6,6 +6,12 @@ Además, se han incorporado funcionalidades de diseño propio que aportan mejora
 Todos los sprites, así como el código del proyecto, han sido creados desde cero o reutilizados de proyectos anteriores propios.  
 En todo momento se ha intentado mantener una línea estética coherente para todas las escenas del proyecto.  
 
+Como característica global, se ha implementado un sistema adaptación de pantalla orientado a dispositivos móviles.  
+Este sistema:
+- Fuerza el contenido del juego a una escala fija de **16:9**.
+- Ajusta automáticamente el escalado tanto en orientación **landscape** como **portrait** para que todo el contenido encaje en pantalla.
+- Garantiza una experiencia visual consistente en diferentes resoluciones y tamaños de pantalla.
+  
 El objetivo principal de esta prueba es evaluar mis conocimientos actuales en programación utilizando el motor gráfico _Cocos Creator_.
 
 ---
