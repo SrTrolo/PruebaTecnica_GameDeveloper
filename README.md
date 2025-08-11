@@ -4,7 +4,7 @@ En esta prueba técnica se ha trabajado siguiendo las especificaciones y pautas 
 Además, se han incorporado funcionalidades de diseño propio que aportan mejoras al proyecto.  
 
 Todos los sprites, así como el código del proyecto, han sido creados desde cero o reutilizados de proyectos anteriores propios [1][2].  
-En todo momento se ha intentado mantener una línea estética coherente para todas las escenas del proyecto.  
+En todo momento se ha intentado mantener una estética coherente para todas las escenas del proyecto.  
 
 Como característica global, se ha implementado un sistema adaptación de pantalla orientado a dispositivos móviles.  
 Este sistema:
